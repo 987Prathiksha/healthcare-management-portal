@@ -1,4 +1,8 @@
+# Ignore node_modules in any subfolder
 node_modules/
+dist/
 .env
-client/node_modules/
-backend/node_modules/
+
+# Make sure backend and client folders are NOT ignored
+!backend/
+!client/
