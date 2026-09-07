@@ -8,9 +8,14 @@ const appointmentRoutes = require("./routes/appointments");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
 
-// Locate your mongoose connection code and add these option flags
+// CORS Configuration - Allows local testing and prepares for deployment URL
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  credentials: true
+}));
+
+// MongoDB Connection with secure TLS options
 mongoose.connect(process.env.MONGO_URI, {
   tls: true,
   tlsAllowInvalidCertificates: true
@@ -21,4 +26,6 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use("/auth", authRoutes);
 app.use("/appointments", appointmentRoutes);
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+// Dynamic Port Assignment for Cloud Hosting Platforms
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running smoothly on port ${PORT}`));
