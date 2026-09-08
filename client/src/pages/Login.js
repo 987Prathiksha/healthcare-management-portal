@@ -18,7 +18,6 @@ const login = async () => {
 
         alert("Login successful!");
         
-        // 3. TRIGGER REDIRECT
         window.location.href = "/dashboard"; 
         
     } catch (err) {
