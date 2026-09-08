@@ -5,13 +5,22 @@ import axios from 'axios';
 function Login({ toggleAuth }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const login = async () => {
+const login = async () => {
     try {
-      const res = await axios.post("https://healthcare-management-portal-1.onrender.com", { email, password });
-      localStorage.setItem("userId", res.data.user._id || res.data.userId);
-      alert("Login successful!");
-      window.location.reload(); 
+        const res = await axios.post("https://onrender.com", { email, password });
+        
+        // 1. SAVE THE SECURITY TOKEN (Crucial for page loads)
+        localStorage.setItem("token", res.data.token);
+
+        // 2. USE OPTIONAL CHAINING (?.) TO SAFELY CAPTURE THE ID WITHOUT CRASHING
+        const verifiedId = res.data.user?._id || res.data.userId || res.data._id;
+        localStorage.setItem("userId", verifiedId);
+
+        alert("Login successful!");
+        
+        // 3. TRIGGER REDIRECT
+        window.location.href = "/dashboard"; 
+        
     } catch (err) {
       console.error(err);
       alert("Invalid credentials. Please try again.");
