@@ -7,7 +7,7 @@ function Login({ toggleAuth }) {
   const [password, setPassword] = useState("");
 const login = async () => {
     try {
-        const res = await axios.post("https://onrender.com/auth/login", { email, password });
+        const res = await axios.post("https://healthcare-management-portal-1.onrender.com/auth/login", { email, password });
         
         // 1. SAVE THE SECURITY TOKEN (Crucial for page loads)
         localStorage.setItem("token", res.data.token);
