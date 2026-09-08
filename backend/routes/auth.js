@@ -21,26 +21,41 @@ router.post("/register", async (req, res) => {
 });
 
 // ➡️ LOGIN ROUTE
+ //  CORRECT LOGIC
+const bcrypt = require('bcryptjs'); // or 'bcrypt' depending on your package.json
+
 router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: "User not found" });
+    try {
+        const { email, password } = req.body;
 
-    const isMatch = await bcrypt.compare(req.body.password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+        // 1. Locate the user profile document
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
 
-    // FIXED: Ensured options object is properly structured and closed
-    const token = jwt.sign(
-      { id: user._id, role: user.role }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: "1h" }
-    );
+        // 2. Properly compare incoming plain text against the encrypted hash in Atlas
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
 
-    res.json({ token });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+        // 3. Return the payload token along with user details
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        
+        res.json({
+            token,
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
+
 
 module.exports = router;
