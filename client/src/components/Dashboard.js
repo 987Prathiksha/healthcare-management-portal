@@ -25,6 +25,7 @@ function Dashboard() {
     const fetchAppointments = async () => {
       setLoading(true);
       try {
+        const userId = localStorage.getItem("userId"); // 1. Retrieve the logged-in user's ID
         const endpoint = adminMode 
           ? "https://healthcare-management-portal.onrender.com/appointment/admin/all"
           : "https://healthcare-management-portal.onrender.com/appointments/list";
