@@ -39,7 +39,7 @@ function Register({ toggleAuth }) {
       return;
     }
     try {
-      await axios.post("https://healthcare-management-portal-1.onrender.com", { name, email, password, role: "patient" });
+      await axios.post("https://healthcare-management-portal-1.onrender.com/auth/register", { name, email, password, role: "patient" });
       alert("Registration successful! Please log in.");
       toggleAuth(); 
     } catch (err) {
