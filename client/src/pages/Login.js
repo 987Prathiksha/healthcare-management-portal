@@ -8,7 +8,7 @@ function Login({ toggleAuth }) {
 
   const login = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", { email, password });
+      const res = await axios.post("https://healthcare-management-portal-1.onrender.com", { email, password });
       localStorage.setItem("token", res.data.token);
       alert("Login successful!");
       window.location.reload(); 
