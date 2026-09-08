@@ -39,11 +39,17 @@ router.get("/admin/all", async (req, res) => {
 });
 
 // ➡️ 3. GET: Standard regular user lookup file path listing
-router.get("/list", async (req, res) => {
-  try {
-    const appointments = await Appointment.find({});
-    res.json(appointments);
-  } catch (error) {
+// 3. GET: Standard regular user lookup file path listing
+router.get("/list/:userId", async (req, res) => {
+    try {
+        // Extract the user ID sent from the frontend URL parameter
+        const { userId } = req.params; 
+
+        // ONLY fetch appointments where the patientId matches this specific user
+        const appointments = await Appointment.find({ patientId: userId });
+        
+        res.json(appointments);
+    } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
