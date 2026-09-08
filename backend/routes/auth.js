@@ -8,11 +8,11 @@ const User = require('../models/User');
 router.post("/register", async (req, res) => {
   try {
     // FIXED: Added this line to extract form data from the request body
-    const { name, email, password, role } = req.body; 
+    const salt=await bcrypt.genSalt(10);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword, role });
-    await user.save();
+    const hashedPassword = await bcrypt.hash(password,salt);
+    const newUser = new User({ name, email, password: hashedPassword });
+    await newUser.save();
     
     res.json({ message: "User registered successfully" });
   } catch (error) {
