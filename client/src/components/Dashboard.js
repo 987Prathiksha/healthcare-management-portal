@@ -26,8 +26,8 @@ function Dashboard() {
       setLoading(true);
       try {
         const endpoint = adminMode 
-          ? "http://localhost:5000/appointments/admin/all" 
-          : "http://localhost:5000/appointments/list";
+          ? "https://healthcare-management-portal.onrender.com/appointment/admin/all"
+          : "https://healthcare-management-portal.onrender.com/appointments/list";
 
         const res = await axios.get(endpoint);
         setAppointments(res.data);
