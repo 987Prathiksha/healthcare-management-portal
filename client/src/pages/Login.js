@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 // ➡️ FIXED: Accepting the toggleAuth property from App.js on line 4
-function Login({ toggleAuth }) {
+function Login({ toggleAuth, onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 const login = async () => {
@@ -18,7 +18,7 @@ const login = async () => {
 
         alert("Login successful!");
         
-        window.location.href = "/dashboard"; 
+       onLoginSuccess();
         
     } catch (err) {
       console.error(err);

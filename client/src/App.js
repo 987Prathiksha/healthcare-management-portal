@@ -44,7 +44,8 @@ function App() {
     return showRegister ? (
       <Register toggleAuth={() => setShowRegister(false)} />
     ) : (
-      <Login toggleAuth={() => setShowRegister(true)} />
+      // ADD THE PROP HERE: Pass an arrow function to log the user in instantly
+      <Login toggleAuth={() => setShowRegister(true)} onLoginSuccess={() => setIsLoggedIn(true)} />
     );
   }
 
