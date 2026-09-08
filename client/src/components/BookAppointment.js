@@ -19,7 +19,7 @@ function BookAppointment() {
   const handleBooking = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/appointments/book", {
+      await axios.post("https://healthcare-management-portal-1.onrender.com/appointments/book", {
         patientId: "65f1234567890abcdef12345", 
         doctorName: doctorName,
         date: date,
