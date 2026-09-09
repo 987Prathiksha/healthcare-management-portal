@@ -9,6 +9,9 @@ function Register({ toggleAuth }) {
   // ➡️ NEW STATE: Tracks current password strength level
   const [strength, setStrength] = useState({ label: "", color: "#9ca3af", width: "0%" });
 
+  // Configured exclusively for local execution environment
+  const BACKEND_URL = "http://localhost:5000";
+
   // ➡️ NEW FUNCTION: Evaluates password text strength dynamically
   const checkPasswordStrength = (pass) => {
     setPassword(pass);
@@ -39,7 +42,8 @@ function Register({ toggleAuth }) {
       return;
     }
     try {
-      await axios.post("https://healthcare-management-portal-1.onrender.com/auth/register", { name, email, password, role: "patient" });
+      // Redirected registration endpoint cleanly to localhost routes
+      await axios.post(`${BACKEND_URL}/auth/register`, { name, email, password, role: "patient" });
       alert("Registration successful! Please log in.");
       toggleAuth(); 
     } catch (err) {
@@ -75,7 +79,6 @@ function Register({ toggleAuth }) {
           <input type="email" onChange={(e) => setEmail(e.target.value)} style={styles.input} required />
           
           <label style={styles.label}>Password</label>
-          {/* Changed input to feed our real-time tracking method */}
           <input 
             type="password" 
             value={password}
@@ -84,7 +87,7 @@ function Register({ toggleAuth }) {
             required 
           />
           
-          {/* ➡️ NEW: Interactive Strength UI Banner Module */}
+          {/* ➡️ Interactive Strength UI Banner Module */}
           {password.length > 0 && (
             <div>
               <div style={styles.meterContainer}>
