@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // Import to read token values
+import { jwtDecode } from "jwt-decode"; 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import BookAppointment from "./components/BookAppointment";
@@ -8,7 +8,7 @@ import Dashboard from "./components/Dashboard";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const [userName, setUserName] = useState(""); // User name state holder
+  const [userName, setUserName] = useState(""); 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -17,8 +17,18 @@ function App() {
       try {
         // Extract user details safely out of the browser JWT memory
         const decoded = jwtDecode(token);
+        
         // Fallback placeholder if custom backend sign keys lack explicit name attributes
         setUserName(decoded.name || "Patient"); 
+
+        // 🛡️ AUTO-HEAL STORAGE: If userId is missing or stored as the string "undefined"
+        const currentUserId = localStorage.getItem("userId");
+        if (!currentUserId || currentUserId === "undefined" || currentUserId === "null") {
+          if (decoded.id) {
+            console.log("Auto-healing local storage: Restoring userId from JWT token.");
+            localStorage.setItem("userId", decoded.id);
+          }
+        }
       } catch (err) {
         console.error("Token decode parsing failed:", err);
       }
@@ -26,23 +36,24 @@ function App() {
   }, []);
 
   const handleLoginSuccess = () => {
-    // Read token immediately upon successful verification to set name state
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token);
         setUserName(decoded.name || "Patient");
+        if (decoded.id) {
+          localStorage.setItem("userId", decoded.id);
+        }
       } catch (err) {
         console.error(err);
       }
     }
     setIsLoggedIn(true);
-    // Force a clean reload to sync localStorage variables across all active components
     window.location.reload();
   };
 
   const handleLogout = () => {
-    localStorage.clear(); // Clears token, userId, and all stale session properties cleanly
+    localStorage.clear(); // Wipes out all old session attributes cleanly
     setIsLoggedIn(false);
     window.location.reload();
   };
@@ -60,7 +71,6 @@ function App() {
     return showRegister ? (
       <Register toggleAuth={() => setShowRegister(false)} />
     ) : (
-      // Fixed property routing to ensure session synchronizations align cleanly
       <Login toggleAuth={() => setShowRegister(true)} onLoginSuccess={handleLoginSuccess} />
     );
   }
