@@ -16,6 +16,9 @@ import {
 // Register Chart.js modules inside the engine configuration
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
+// Base Backend URL definition
+const BACKEND_URL = "https://healthcare-management-portal.onrender.com";
+
 function Dashboard() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,10 +28,12 @@ function Dashboard() {
     const fetchAppointments = async () => {
       setLoading(true);
       try {
-        const userId = localStorage.getItem("userId"); // 1. Retrieve the logged-in user's ID
+        const userId = localStorage.getItem("userId"); // Retrieve the logged-in user's ID
+        
+        // Corrected routes matching your live Node API paths
         const endpoint = adminMode 
-          ? "https://healthcare-management-portal-1.onrender.com"
-          : 'https://healthcare-management-portal-1.onrender.com/{userId}';
+          ? `${BACKEND_URL}/appointment/admin/all`
+          : `${BACKEND_URL}/appointments/list/${userId}`;
 
         const res = await axios.get(endpoint);
 
@@ -115,7 +120,8 @@ function Dashboard() {
   const handleCancel = async (id) => {
     if (window.confirm("Are you sure you want to cancel this appointment?")) {
       try {
-        await axios.delete(`http://localhost:5000/appointments/cancel/${id}`);
+        // Corrected localhost to your production backend URL
+        await axios.delete(`${BACKEND_URL}/appointments/cancel/${id}`);
         setAppointments(appointments.filter(app => app._id !== id));
       } catch (err) {
         alert("Failed to cancel.");
