@@ -27,10 +27,10 @@ function Dashboard() {
       try {
         const userId = localStorage.getItem("userId"); // 1. Retrieve the logged-in user's ID
         const endpoint = adminMode 
-          ? "https://healthcare-management-portal-1.onrender.com/appointment/admin/all"
-          : "https://healthcare-management-portal-1.onrender.com/appointments/list";
+          ? "https://healthcare-management-portal-1.onrender.com"
+          : 'https://healthcare-management-portal-1.onrender.com/{userId}';
 
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/appointments/list/`+userId)
+        const res = await axios.get(endpoint);
 
         setAppointments(res.data);
         setLoading(false);
