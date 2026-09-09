@@ -30,8 +30,7 @@ function Dashboard() {
           ? "https://healthcare-management-portal-1.onrender.com/appointment/admin/all"
           : "https://healthcare-management-portal-1.onrender.com/appointments/list";
 
-        const res = await axios.get('https://healthcare-management-portal-1.onrender.com/appointments/list/${userId}/');
-
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/appointments/list/`+userId)
 
         setAppointments(res.data);
         setLoading(false);
