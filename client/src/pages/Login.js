@@ -5,20 +5,24 @@ import axios from 'axios';
 function Login({ toggleAuth, onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-const login = async () => {
+
+  // Configured exclusively for local execution environment
+  const BACKEND_URL = "http://localhost:5000";
+
+  const login = async () => {
     try {
-        const res = await axios.post("https://healthcare-management-portal-1.onrender.com/auth/login", { email, password });
+      // Redirected request target route to point cleanly to localhost
+      const res = await axios.post(`${BACKEND_URL}/auth/login`, { email, password });
         
-        // 1. SAVE THE SECURITY TOKEN (Crucial for page loads)
-        localStorage.setItem("token", res.data.token);
+      // 1. SAVE THE SECURITY TOKEN (Crucial for page loads)
+      localStorage.setItem("token", res.data.token);
 
-        // 2. USE OPTIONAL CHAINING (?.) TO SAFELY CAPTURE THE ID WITHOUT CRASHING
-        const verifiedId = res.data.user?._id || res.data.userId || res.data._id;
-        localStorage.setItem("userId", verifiedId);
+      // 2. USE OPTIONAL CHAINING (?.) TO SAFELY CAPTURE THE ID WITHOUT CRASHING
+      const verifiedId = res.data.user?._id || res.data.userId || res.data._id;
+      localStorage.setItem("userId", verifiedId);
 
-        alert("Login successful!");
-        
-       onLoginSuccess();
+      alert("Login successful!");
+      onLoginSuccess();
         
     } catch (err) {
       console.error(err);
