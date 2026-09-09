@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
-// ➡️ 1. IMPORT CHART.JS COMPONENTS
+// ➡️ IMPORT CHART.JS COMPONENTS
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -16,8 +16,8 @@ import {
 // Register Chart.js modules inside the engine configuration
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-// Base Backend URL definition
-const BACKEND_URL = "https://healthcare-management-portal.onrender.com";
+// Configured exclusively for local execution environment
+const BACKEND_URL = "http://localhost:5000";
 
 function Dashboard() {
   const [appointments, setAppointments] = useState([]);
@@ -30,9 +30,9 @@ function Dashboard() {
       try {
         const userId = localStorage.getItem("userId"); // Retrieve the logged-in user's ID
         
-        // Corrected routes matching your live Node API paths
+        // Aligned perfectly with your backend route paths
         const endpoint = adminMode 
-          ? `${BACKEND_URL}/appointment/admin/all`
+          ? `${BACKEND_URL}/appointments/admin/all`
           : `${BACKEND_URL}/appointments/list/${userId}`;
 
         const res = await axios.get(endpoint);
@@ -40,14 +40,14 @@ function Dashboard() {
         setAppointments(res.data);
         setLoading(false);
       } catch (err) {
-        console.error(err);
+        console.error("API Error Response: ", err);
         setLoading(false);
       }
     };
     fetchAppointments();
   }, [adminMode]);
 
-  // ➡️ 2. PROCESS LIVE DATABASE DATA FOR THE GRAPH
+  // ➡️ PROCESS LIVE DATABASE DATA FOR THE GRAPH
   const getChartData = () => {
     const doctorCounts = {};
     
@@ -120,7 +120,6 @@ function Dashboard() {
   const handleCancel = async (id) => {
     if (window.confirm("Are you sure you want to cancel this appointment?")) {
       try {
-        // Corrected localhost to your production backend URL
         await axios.delete(`${BACKEND_URL}/appointments/cancel/${id}`);
         setAppointments(appointments.filter(app => app._id !== id));
       } catch (err) {
@@ -157,7 +156,7 @@ function Dashboard() {
         </button>
       </div>
 
-      {/* ➡️ 3. NEW: CONDITIONAL CHART CARD VISUALIZATION FOR ADMIN MODE */}
+      {/* NEW: CONDITIONAL CHART CARD VISUALIZATION FOR ADMIN MODE */}
       {adminMode && appointments.length > 0 && (
         <div style={styles.chartCard}>
           <Bar data={getChartData()} options={chartOptions} />
