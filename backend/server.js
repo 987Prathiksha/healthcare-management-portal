@@ -31,6 +31,30 @@ mongoose.connect(mongoURI, {
 app.use("/auth", authRoutes);
 app.use("/appointments", appointmentRoutes);
 
+// 🟩 ADD THIS TO THE BOTTOM OF YOUR backend/server.js FILE
+const Appointment = require('./models/Appointment'); // Imports your Appointment database schema
+
+app.get('/appointments/list/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        
+        // This queries the database records matching the user's ID
+        const userAppointments = await Appointment.find({
+            $or: [
+                { patientId: userId },
+                { userId: userId },
+                { user: userId }
+            ]
+        });
+        
+        return res.status(200).json(userAppointments);
+    } catch (error) {
+        console.error("Direct server route error:", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+
 // Server Init
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running smoothly on port ${PORT}`));
