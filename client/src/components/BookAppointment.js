@@ -16,11 +16,17 @@ function BookAppointment() {
 
   const availableSlots = ["09:00 AM", "10:00 AM", "11:00 AM", "01:00 PM", "02:00 PM", "03:00 PM"];
 
+  // Configured exclusively for local execution environment
+  const BACKEND_URL = "http://localhost:5000";
+
   const handleBooking = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://healthcare-management-portal-1.onrender.com/appointments/book", {
-        patientId: "65f1234567890abcdef12345", 
+      // Dynamically pull the exact active logged-in user ID matching the Dashboard lookup blueprint
+      const userId = localStorage.getItem("userId") || "65f1234567890abcdef12345";
+
+      await axios.post(`${BACKEND_URL}/appointments/book`, {
+        patientId: userId, 
         doctorName: doctorName,
         date: date,
         timeSlot: timeSlot
